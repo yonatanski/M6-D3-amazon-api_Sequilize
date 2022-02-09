@@ -1,0 +1,27 @@
+{
+  "name": "m6-d2-pg",
+  "version": "1.0.0",
+  "type": "module",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "prestart": "npm run create-tables",
+    "start": "node ./src/server.js",
+    "dev": "nodemon -r dotenv/config ./src/server.js",
+    "create-tables": "node -r dotenv/config ./src/utils/db/create-tables.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^4.17.2",
+    "pg": "^8.7.3",
+    "pg-hstore": "^2.3.4",
+    "sequelize": "^6.16.0"
+  },
+  "devDependencies": {
+    "dotenv": "^16.0.0",
+    "nodemon": "^2.0.15"
+  }
+}
