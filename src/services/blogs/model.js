@@ -1,10 +1,10 @@
-import { DataTypes } from "sequelize";
+import { DataTypes } from "sequelize"
 
-import sequelize from "../../utils/db/connect.js";
+import sequelize from "../../utils/db/connect.js"
 
-import Sequelize from "sequelize";
+import Sequelize from "sequelize"
 
-import Author from "../authors/model.js";
+import Author from "../products/model.js"
 
 const Blog = sequelize.define(
   "blog",
@@ -32,12 +32,12 @@ const Blog = sequelize.define(
     },
   },
   { underscored: true }
-);
+)
 
 Author.hasMany(Blog, {
   onDelete: "CASCADE",
-});
+})
 
-Blog.belongsTo(Author);
+Blog.belongsTo(Author)
 
-export default Blog;
+export default Blog

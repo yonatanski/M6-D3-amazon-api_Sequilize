@@ -4,8 +4,8 @@ import sequelize from "../../utils/db/connect.js";
 
 import Sequelize from "sequelize";
 
-const Author = sequelize.define(
-  "author",
+const Product = sequelize.define(
+  "product",
   {
     id: {
       type: DataTypes.UUID,
@@ -41,4 +41,4 @@ const Author = sequelize.define(
   { underscored: true }
 );
 
-export default Author;
+export default Product;
