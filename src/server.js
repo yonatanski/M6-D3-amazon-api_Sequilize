@@ -1,16 +1,16 @@
 import express from "express"
 import productsRouter from "./services/products/routes.js"
-import blogsRoutes from "./services/blogs/routes.js"
+import reviewsRouter from "./services/Review/routes.js"
 import { authenticateDatabase } from "./utils/db/connect.js"
 
 const server = express()
 
-const { PORT = 5001 } = process.env
+const { PORT = 7000 } = process.env
 
 server.use(express.json())
 
-server.use("/authors", productsRouter)
-server.use("/blogs", blogsRoutes)
+server.use("/products", productsRouter)
+server.use("/reviews", reviewsRouter)
 
 server.listen(PORT, () => {
   authenticateDatabase()

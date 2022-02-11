@@ -4,10 +4,10 @@ import sequelize from "../../utils/db/connect.js"
 
 import Sequelize from "sequelize"
 
-import Author from "../products/model.js"
+import Product from "../products/model.js"
 
-const Blog = sequelize.define(
-  "blog",
+const Review = sequelize.define(
+  "review",
   {
     id: {
       type: DataTypes.UUID,
@@ -15,29 +15,27 @@ const Blog = sequelize.define(
       allowNull: false,
       primaryKey: true,
     },
-    title: {
-      type: DataTypes.STRING,
+    rate: {
+      type: DataTypes.INTEGER,
       allowNull: false,
     },
-    content: {
+    text: {
       type: DataTypes.TEXT,
       allowNull: false,
     },
-    cover: {
+    username: {
       type: DataTypes.STRING,
-      defaultValue: "https://picsum.photos/900/600",
-      validate: {
-        isURL: true,
-      },
+      allowNull: false,
     },
   },
   { underscored: true }
 )
-
-Author.hasMany(Blog, {
+Product.hasMany(Review, {
   onDelete: "CASCADE",
 })
 
-Blog.belongsTo(Author)
+Review.belongsTo(Product, {
+  onDelete: "CASCADE",
+})
 
-export default Blog
+export default Review

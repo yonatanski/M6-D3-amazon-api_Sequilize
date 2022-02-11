@@ -1,8 +1,8 @@
-import { DataTypes } from "sequelize";
+import { DataTypes } from "sequelize"
 
-import sequelize from "../../utils/db/connect.js";
+import sequelize from "../../utils/db/connect.js"
 
-import Sequelize from "sequelize";
+import Sequelize from "sequelize"
 
 const Product = sequelize.define(
   "product",
@@ -13,23 +13,16 @@ const Product = sequelize.define(
       allowNull: false,
       primaryKey: true,
     },
-    email: {
-      type: DataTypes.STRING,
-      allowNull: false,
-      unique: true,
-      validate: {
-        isEmail: true,
-      },
-    },
-    firstName: {
+    name: {
       type: DataTypes.STRING,
       allowNull: false,
     },
-    lastName: {
-      type: DataTypes.STRING,
+
+    description: {
+      type: DataTypes.TEXT,
       allowNull: false,
     },
-    avatar: {
+    image: {
       type: DataTypes.STRING,
       allowNull: false,
       defaultValue: "https://i.pravatar.cc/300",
@@ -37,8 +30,12 @@ const Product = sequelize.define(
         isURL: true,
       },
     },
+    price: {
+      type: DataTypes.FLOAT,
+      allowNull: false,
+    },
   },
   { underscored: true }
-);
+)
 
-export default Product;
+export default Product
