@@ -1,15 +1,38 @@
 import { Router } from "express"
+import { Op } from "sequelize"
 import Product from "./model.js"
 import Review from "../Review/model.js"
 
 const productsRouter = Router()
 
-productsRouter.get("/", async (req, res, next) => {
+// productsRouter.get("/", async (req, res, next) => {
+//   try {
+//     const products = await Product.findAll({
+//       include: [Review],
+//     })
+//     res.send(products)
+//   } catch (error) {
+//     res.status(500).send({ error: error.message })
+//   }
+// })
+productsRouter.get("/search", async (req, res, next) => {
   try {
-    const products = await Product.findAll({
-      include: [Review],
-    })
-    res.send(products)
+    if (req.query.q) {
+      const query = req.query.q
+      console.log("query", query)
+      const products = await Product.findAll({
+        where: {
+          [Op.or]: [{ product_name: { [Op.iLike]: `%${query}%` } }, { product_description: { [Op.iLike]: `%${query}%` } }],
+        },
+        include: [Review],
+      })
+      res.send(products)
+    } else {
+      const products = await Product.findAll({
+        include: [Review],
+      })
+      res.send(products)
+    }
   } catch (error) {
     res.status(500).send({ error: error.message })
   }
@@ -17,7 +40,12 @@ productsRouter.get("/", async (req, res, next) => {
 
 productsRouter.get("/:id", async (req, res, next) => {
   try {
-    const singleProduct = await Product.findByPk(req.params.id)
+    const singleProduct = await Product.findOne({
+      where: {
+        id: req.params.id,
+      },
+      include: Review,
+    }) //findByPk(req.params.id)
     if (singleProduct) {
       res.send(singleProduct)
     } else {

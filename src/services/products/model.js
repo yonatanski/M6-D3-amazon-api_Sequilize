@@ -13,16 +13,20 @@ const Product = sequelize.define(
       allowNull: false,
       primaryKey: true,
     },
-    name: {
+    product_name: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+    product_category: {
       type: DataTypes.STRING,
       allowNull: false,
     },
 
-    description: {
+    product_description: {
       type: DataTypes.TEXT,
       allowNull: false,
     },
-    image: {
+    product_image: {
       type: DataTypes.STRING,
       allowNull: false,
       defaultValue: "https://i.pravatar.cc/300",
@@ -30,7 +34,7 @@ const Product = sequelize.define(
         isURL: true,
       },
     },
-    price: {
+    product_price: {
       type: DataTypes.FLOAT,
       allowNull: false,
     },

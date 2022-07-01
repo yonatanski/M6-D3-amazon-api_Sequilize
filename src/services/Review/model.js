@@ -15,18 +15,21 @@ const Review = sequelize.define(
       allowNull: false,
       primaryKey: true,
     },
-    rate: {
-      type: DataTypes.INTEGER,
-      allowNull: false,
-    },
+
     text: {
       type: DataTypes.TEXT,
       allowNull: false,
     },
-    username: {
-      type: DataTypes.STRING,
+
+    rate: {
+      type: DataTypes.INTEGER,
       allowNull: false,
     },
+
+    // username: {
+    //   type: DataTypes.STRING,
+    //   allowNull: false,
+    // },
   },
   { underscored: true }
 )
