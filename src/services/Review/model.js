@@ -33,12 +33,12 @@ const Review = sequelize.define(
   },
   { underscored: true }
 )
-Product.hasMany(Review, {
-  onDelete: "CASCADE",
-})
+// Product.hasMany(Review, {
+//   onDelete: "CASCADE",
+// })
 
-Review.belongsTo(Product, {
-  onDelete: "CASCADE",
-})
+// Review.belongsTo(Product, {
+//   onDelete: "CASCADE",
+// })
 
 export default Review
