@@ -7,7 +7,18 @@ import Sequelize from "sequelize"
 //   dialect: "postgres",
 // })
 
-const sequelize = new Sequelize(process.env.PGDATABASE, process.env.PGUSER, process.env.PGPASSWORD, { host: process.env.PGHOST, dialect: "postgres" })
+const sequelize = new Sequelize(process.env.PGDATABASE, process.env.PGUSER, process.env.PGPASSWORD, {
+  host: process.env.PGHOST,
+  dialect: "postgres",
+  ...(process.env.NODE_ENV === "production" && {
+    dialectOptions: {
+      ssl: {
+        require: true,
+        rejectUnauthorized: false,
+      },
+    },
+  }),
+})
 
 export const authenticateDatabase = async () => {
   try {
