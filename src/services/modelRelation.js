@@ -3,6 +3,7 @@ import Product from "./products/model.js"
 import Review from "./Review/model.js"
 import User from "./user/model.js"
 import ProductCategory from "./productCategory/model.js"
+import Cart from "./Cart/model.js"
 
 // Proudct - Review --> on to many relationship
 
@@ -24,4 +25,14 @@ Review.belongsTo(User, { onDelete: "CASCADE" })
 Category.belongsToMany(Product, { through: ProductCategory, onDelete: "CASCADE" })
 Product.belongsToMany(Category, { through: ProductCategory, onDelete: "CASCADE" })
 
-export { Category, ProductCategory, Product, Review, User }
+// User  - Cart --> one to many relationship
+
+User.hasMany(Cart, { onDelete: "CASCADE" })
+Cart.belongsTo(User, { onDelete: "CASCADE" })
+
+// Product  - Cart --> one to many relationship
+
+Product.hasMany(Cart, { onDelete: "CASCADE" })
+Cart.belongsTo(Product, { onDelete: "CASCADE" })
+
+export { Category, ProductCategory, Product, Review, User, Cart }

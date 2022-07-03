@@ -3,7 +3,7 @@ import { Op } from "sequelize"
 import sequelize from "sequelize"
 // import Product from "./model.js"
 // import Review from "../Review/model.js"
-import { ProductCategory, Category, Product, Review, User } from "../modelRelation.js"
+import { ProductCategory, Category, Product, Review, User, Cart } from "../modelRelation.js"
 
 const productsRouter = Router()
 

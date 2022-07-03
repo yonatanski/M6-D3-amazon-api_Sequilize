@@ -1,5 +1,6 @@
 import express from "express"
 import listEndpoints from "express-list-endpoints"
+import cartRouter from "./services/Cart/routes.js"
 import categoryRouter from "./services/Category/routes.js"
 import productsRouter from "./services/products/routes.js"
 import reviewsRouter from "./services/Review/routes.js"
@@ -16,6 +17,7 @@ server.use("/products", productsRouter)
 server.use("/reviews", reviewsRouter)
 server.use("/users", userRouter)
 server.use("/categories", categoryRouter)
+server.use("/cart", cartRouter)
 
 server.listen(PORT, async () => {
   await authenticateDatabase()
