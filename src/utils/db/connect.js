@@ -12,7 +12,7 @@ const sequelize = new Sequelize(process.env.PGDATABASE, process.env.PGUSER, proc
 export const authenticateDatabase = async () => {
   try {
     await sequelize.authenticate({ logging: false })
-    await sequelize.sync({ alert: true, logging: false })
+    await sequelize.sync({ logging: false })
     console.log("✅ Connection has been established successfully.")
   } catch (error) {
     console.log(error)

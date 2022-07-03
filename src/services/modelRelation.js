@@ -1,7 +1,8 @@
-import Category from "../Category/model.js"
-import Product from "../products/model.js"
-import Review from "../Review/model.js"
-import User from "../user/model.js"
+import Category from "./Category/model.js"
+import Product from "./products/model.js"
+import Review from "./Review/model.js"
+import User from "./user/model.js"
+import ProductCategory from "./productCategory/model.js"
 
 // Proudct - Review --> on to many relationship
 
@@ -23,4 +24,4 @@ Review.belongsTo(User, { onDelete: "CASCADE" })
 Category.belongsToMany(Product, { through: ProductCategory, onDelete: "CASCADE" })
 Product.belongsToMany(Category, { through: ProductCategory, onDelete: "CASCADE" })
 
-export { Category, Product, Review, User }
+export { Category, ProductCategory, Product, Review, User }

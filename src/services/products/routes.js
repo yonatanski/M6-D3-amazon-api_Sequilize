@@ -1,20 +1,27 @@
 import { Router } from "express"
 import { Op } from "sequelize"
-import Product from "./model.js"
-import Review from "../Review/model.js"
+import sequelize from "sequelize"
+// import Product from "./model.js"
+// import Review from "../Review/model.js"
+import { ProductCategory, Category, Product, Review, User } from "../modelRelation.js"
 
 const productsRouter = Router()
 
-// productsRouter.get("/", async (req, res, next) => {
-//   try {
-//     const products = await Product.findAll({
-//       include: [Review],
-//     })
-//     res.send(products)
-//   } catch (error) {
-//     res.status(500).send({ error: error.message })
-//   }
-// })
+productsRouter.get("/", async (req, res, next) => {
+  try {
+    const { offset = 0, limit = 2 } = req.query
+    const totalBlog = await Product.count({})
+
+    const products = await Product.findAll({
+      include: [Review, Category],
+      offset,
+      limit,
+    })
+    res.send({ totalBlog, products })
+  } catch (error) {
+    res.status(500).send({ error: error.message })
+  }
+})
 productsRouter.get("/search", async (req, res, next) => {
   try {
     if (req.query) {
@@ -37,6 +44,28 @@ productsRouter.get("/search", async (req, res, next) => {
     res.status(500).send({ error: error.message })
   }
 })
+productsRouter.get("/stats", async (req, res, next) => {
+  try {
+    const stats = await Review.findAll({
+      // select list : what you want to get ?
+      attributes: [
+        [
+          sequelize.cast(
+            // cast function converts datatype
+            sequelize.fn("count", sequelize.col("product_id")), // SELECT COUNT(blog_id) AS total_comments
+            "integer"
+          ),
+          "numberOfReviews",
+        ],
+      ],
+      group: ["product_id", "product.id"],
+      include: [{ model: Product }], // <-- nested include
+    })
+    res.send(stats)
+  } catch (error) {
+    res.status(500).send({ message: error.message })
+  }
+})
 
 productsRouter.get("/:id", async (req, res, next) => {
   try {
@@ -44,7 +73,7 @@ productsRouter.get("/:id", async (req, res, next) => {
       where: {
         id: req.params.id,
       },
-      include: Review,
+      include: [{ model: Review, include: User }, Category],
     }) //findByPk(req.params.id)
     if (singleProduct) {
       res.send(singleProduct)
@@ -58,7 +87,15 @@ productsRouter.get("/:id", async (req, res, next) => {
 
 productsRouter.post("/", async (req, res, next) => {
   try {
-    const newProduct = await Product.create(req.body)
+    const { categoryId, ...rest } = req.body
+    const newProduct = await Product.create(rest)
+
+    if (newProduct) {
+      await ProductCategory.create({
+        categoryId: req.body.categoryId,
+        productId: newProduct.id,
+      })
+    }
     res.send(newProduct)
   } catch (error) {
     res.status(500).send({ message: error.message })

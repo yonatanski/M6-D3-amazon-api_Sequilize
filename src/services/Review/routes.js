@@ -19,9 +19,10 @@ reviewsRouter.post("/", async (req, res, next) => {
   try {
     const data = await Review.create(req.body)
     res.send(data)
-  } catch (e) {
-    console.log(e)
-    next(e)
+  } catch (error) {
+    res.status(500).send({ message: error.message })
+    console.log(error)
+    // next(e)
   }
 })
 

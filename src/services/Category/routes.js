@@ -1,53 +1,51 @@
 import { Router } from "express"
 import { Op } from "sequelize"
+import Category from "./model.js"
 import Product from "./model.js"
 import Review from "../Review/model.js"
 
-const productsRouter = Router()
+const categoryRouter = Router()
 
-// productsRouter.get("/", async (req, res, next) => {
-//   try {
-//     const products = await Product.findAll({
-//       include: [Review],
-//     })
-//     res.send(products)
-//   } catch (error) {
-//     res.status(500).send({ error: error.message })
-//   }
-// })
-productsRouter.get("/search", async (req, res, next) => {
+categoryRouter.get("/", async (req, res, next) => {
+  try {
+    const categories = await Category.findAll({})
+    res.send(categories)
+  } catch (error) {
+    res.status(500).send({ error: error.message })
+  }
+})
+categoryRouter.get("/search", async (req, res, next) => {
   try {
     if (req.query) {
       const query = req.query.q
       console.log("query", query)
-      const products = await Product.findAll({
+      const categories = await Category.findAll({
         where: {
-          [Op.or]: [{ product_name: { [Op.iLike]: `%${query}%` } }, { product_description: { [Op.iLike]: `%${query}%` } }, { product_price: { [Op.between]: [req.query.from || 0, req.query.to || infinity] } }],
+          [Op.or]: [{ name: { [Op.iLike]: `%${query}%` } }],
         },
         include: [Review],
       })
-      res.send(products)
+      res.send(categories)
     } else {
-      const products = await Product.findAll({
+      const categories = await Category.findAll({
         include: [Review],
       })
-      res.send(products)
+      res.send(categories)
     }
   } catch (error) {
     res.status(500).send({ error: error.message })
   }
 })
 
-productsRouter.get("/:id", async (req, res, next) => {
+categoryRouter.get("/:id", async (req, res, next) => {
   try {
-    const singleProduct = await Product.findOne({
+    const singlCategory = await Category.findOne({
       where: {
         id: req.params.id,
       },
-      include: Review,
     }) //findByPk(req.params.id)
-    if (singleProduct) {
-      res.send(singleProduct)
+    if (singlCategory) {
+      res.send(singlCategory)
     } else {
       res.status(404).send({ error: "No such Product" })
     }
@@ -56,24 +54,24 @@ productsRouter.get("/:id", async (req, res, next) => {
   }
 })
 
-productsRouter.post("/", async (req, res, next) => {
+categoryRouter.post("/", async (req, res, next) => {
   try {
-    const newProduct = await Product.create(req.body)
-    res.send(newProduct)
+    const newCategory = await Category.create(req.body)
+    res.send(newCategory)
   } catch (error) {
     res.status(500).send({ message: error.message })
   }
 })
 
-productsRouter.put("/:id", async (req, res, next) => {
+categoryRouter.put("/:id", async (req, res, next) => {
   try {
     //
-    const [success, updateProduct] = await Product.update(req.body, {
+    const [success, updateCategory] = await Category.update(req.body, {
       where: { id: req.params.id },
       returning: true,
     })
     if (success) {
-      res.send(updateProduct)
+      res.send(updateCategory)
     } else {
       res.status(404).send({ message: "no such Product" })
     }
@@ -82,9 +80,9 @@ productsRouter.put("/:id", async (req, res, next) => {
   }
 })
 
-productsRouter.delete("/:id", async (req, res, next) => {
+categoryRouter.delete("/:id", async (req, res, next) => {
   try {
-    await Product.destroy({
+    await Category.destroy({
       where: {
         id: req.params.id,
       },
@@ -95,4 +93,4 @@ productsRouter.delete("/:id", async (req, res, next) => {
   }
 })
 
-export default productsRouter
+export default categoryRouter

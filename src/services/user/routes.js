@@ -2,52 +2,53 @@ import { Router } from "express"
 import { Op } from "sequelize"
 import Product from "./model.js"
 import Review from "../Review/model.js"
+import User from "./model.js"
 
-const productsRouter = Router()
+const userRouter = Router()
 
-// productsRouter.get("/", async (req, res, next) => {
-//   try {
-//     const products = await Product.findAll({
-//       include: [Review],
-//     })
-//     res.send(products)
-//   } catch (error) {
-//     res.status(500).send({ error: error.message })
-//   }
-// })
-productsRouter.get("/search", async (req, res, next) => {
+userRouter.get("/", async (req, res, next) => {
+  try {
+    const users = await User.findAll({
+      include: [Review],
+    })
+    res.send(users)
+  } catch (error) {
+    res.status(500).send({ error: error.message })
+  }
+})
+userRouter.get("/search", async (req, res, next) => {
   try {
     if (req.query) {
       const query = req.query.q
       console.log("query", query)
-      const products = await Product.findAll({
+      const users = await User.findAll({
         where: {
-          [Op.or]: [{ product_name: { [Op.iLike]: `%${query}%` } }, { product_description: { [Op.iLike]: `%${query}%` } }, { product_price: { [Op.between]: [req.query.from || 0, req.query.to || infinity] } }],
+          [Op.or]: [{ name: { [Op.iLike]: `%${query}%` } }, { lastName: { [Op.iLike]: `%${query}%` } }],
         },
         include: [Review],
       })
-      res.send(products)
+      res.send(users)
     } else {
-      const products = await Product.findAll({
+      const users = await User.findAll({
         include: [Review],
       })
-      res.send(products)
+      res.send(users)
     }
   } catch (error) {
     res.status(500).send({ error: error.message })
   }
 })
 
-productsRouter.get("/:id", async (req, res, next) => {
+userRouter.get("/:id", async (req, res, next) => {
   try {
-    const singleProduct = await Product.findOne({
+    const singleUser = await User.findOne({
       where: {
         id: req.params.id,
       },
       include: Review,
     }) //findByPk(req.params.id)
-    if (singleProduct) {
-      res.send(singleProduct)
+    if (singleUser) {
+      res.send(singleUser)
     } else {
       res.status(404).send({ error: "No such Product" })
     }
@@ -56,24 +57,24 @@ productsRouter.get("/:id", async (req, res, next) => {
   }
 })
 
-productsRouter.post("/", async (req, res, next) => {
+userRouter.post("/", async (req, res, next) => {
   try {
-    const newProduct = await Product.create(req.body)
-    res.send(newProduct)
+    const newUser = await User.create(req.body)
+    res.send(newUser)
   } catch (error) {
     res.status(500).send({ message: error.message })
   }
 })
 
-productsRouter.put("/:id", async (req, res, next) => {
+userRouter.put("/:id", async (req, res, next) => {
   try {
     //
-    const [success, updateProduct] = await Product.update(req.body, {
+    const [success, updateUser] = await Product.update(req.body, {
       where: { id: req.params.id },
       returning: true,
     })
     if (success) {
-      res.send(updateProduct)
+      res.send(updateUser)
     } else {
       res.status(404).send({ message: "no such Product" })
     }
@@ -82,9 +83,9 @@ productsRouter.put("/:id", async (req, res, next) => {
   }
 })
 
-productsRouter.delete("/:id", async (req, res, next) => {
+userRouter.delete("/:id", async (req, res, next) => {
   try {
-    await Product.destroy({
+    await User.destroy({
       where: {
         id: req.params.id,
       },
@@ -95,4 +96,4 @@ productsRouter.delete("/:id", async (req, res, next) => {
   }
 })
 
-export default productsRouter
+export default userRouter
