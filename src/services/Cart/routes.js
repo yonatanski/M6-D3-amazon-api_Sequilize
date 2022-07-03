@@ -1,9 +1,8 @@
 import { Router } from "express"
 import { Op } from "sequelize"
 import sequelize from "sequelize"
-import Cart from "./model.js"
-import Product from "./model.js"
-import Review from "../Review/model.js"
+
+import { ProductCategory, Category, Product, Review, User, Cart } from "../modelRelation.js"
 
 const cartRouter = Router()
 cartRouter.get("/", async (req, res, next) => {
@@ -41,10 +40,10 @@ cartRouter.get("/", async (req, res, next) => {
 cartRouter.get("/:userId", async (req, res, next) => {
   try {
     const categories = await Cart.findAll({
-      // include: [{ model: Product, include: [Review] }],
-      // attributes: ["productId", [sequelize.fn("count", sequelize.col("cart.id")), "unitQty"], [sequelize.fn("sum", sequelize.col("product.price")), "unitTotalPrice"]],
+      include: [{ model: Product }],
+      attributes: ["productId", [sequelize.fn("count", sequelize.col("cart.id")), "unitQty"], [sequelize.fn("sum", sequelize.col("product.product_price")), "unitTotalPrice"]],
 
-      // group: ["productId", "product.id"],
+      group: ["productId", "product.id"],
 
       where: { userId: req.params.userId },
     })
@@ -55,10 +54,10 @@ cartRouter.get("/:userId", async (req, res, next) => {
       },
     })
 
-    // const totalSum = await Cart.sum("product.price", {
-    //   include: { model: Product, attributes: [] },
-    // })
-    res.send({ categories, totalQty })
+    const totalSum = await Cart.sum("product.product_price", {
+      include: { model: Product, attributes: [] },
+    })
+    res.send({ categories, totalQty, totalSum })
   } catch (error) {
     res.status(500).send({ error: error.message })
   }

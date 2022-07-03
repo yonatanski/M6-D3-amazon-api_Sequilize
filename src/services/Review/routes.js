@@ -1,7 +1,8 @@
 import { Router } from "express"
-import Product from "../products/model.js"
+
 import { Op } from "sequelize"
-import Review from "./model.js"
+
+import { ProductCategory, Category, Product, Review, User, Cart } from "../modelRelation.js"
 
 const reviewsRouter = Router()
 reviewsRouter.get("/", async (req, res, next) => {
