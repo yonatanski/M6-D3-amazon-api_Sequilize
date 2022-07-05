@@ -4,13 +4,14 @@ import cartRouter from "./services/Cart/routes.js"
 import categoryRouter from "./services/Category/routes.js"
 import productsRouter from "./services/products/routes.js"
 import reviewsRouter from "./services/Review/routes.js"
+import cors from "cors"
 import userRouter from "./services/user/routes.js"
 import { authenticateDatabase } from "./utils/db/connect.js"
 
 const server = express()
 
 const { PORT = 7000 } = process.env
-
+server.use(cors())
 server.use(express.json())
 
 server.use("/products", productsRouter)
